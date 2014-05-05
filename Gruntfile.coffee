@@ -6,15 +6,14 @@ module.exports = (grunt) ->
     coffee:
       compile:
         files:
-          './tmp/init-coffee.js': 'app/init.coffee'
-          './tmp/main-coffee.js': 'app/**/*.coffee'
+          './build/<%= pkg.name %>.js': 'app/**/*.coffee'
         
     uglify:
       options:
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd h:M:s") %> */\n'
         
       build:
-        src: ['app/init.js', 'app/**/*.js', './tmp/*.js']
+        src: 'build/<%= pkg.name %>.js'
         dest: 'build/<%= pkg.name %>.min.js'
         
     clean: ['.tmp']
@@ -23,5 +22,6 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-contrib-coffee')
+
   # Default task(s). (The one that is ran when 'grunt' command is called from the directory)
   grunt.registerTask('default', ['coffee', 'uglify', 'clean'])
