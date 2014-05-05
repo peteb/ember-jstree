@@ -1,5 +1,5 @@
 module.exports = (grunt) ->
-  # Project configuration.
+  # Project configuration
   grunt.initConfig
     pkg: grunt.file.readJSON('package.json')
       
@@ -18,10 +18,10 @@ module.exports = (grunt) ->
         
     clean: ['.tmp']
 
-  # Load the plugins that provides the tasks above:
+  # Plugins
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-contrib-coffee')
 
-  # Default task(s). (The one that is ran when 'grunt' command is called from the directory)
+  # Default task(s). Run when 'grunt' command is called from the directory.
   grunt.registerTask('default', ['coffee', 'uglify', 'clean'])
