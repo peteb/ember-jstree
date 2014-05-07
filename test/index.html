@@ -12,11 +12,52 @@
   <script type="text/javascript">
     App = Ember.Application.createWithMixins(EmberJsTree);
     
+    App.ApplicationController = Em.Controller.extend({
+      items: Em.A(),
+      init: function() {
+        var items = Em.A([
+            Node.create({title: 'root1'}),
+            Node.create({title: 'root2'})
+        ]);
+
+        this.set('items', items);
+      },
+      actions: {
+        overwriteItems: function() {
+          var items = Em.A([
+              Node.create({title: 'root1'}),
+              Node.create({title: 'root2', children: Em.A([Node.create({title: 'child 1'}), Node.create({title: 'child 2'})])}),
+              Node.create({title: 'root3'})
+          ]);
+
+          this.set('items', items);
+        },
+        clearItems: function() {
+          this.get('items').clear();
+        },
+        addItem: function() {
+          this.get('items').pushObject(Node.create({title: 'freshly baked'}));
+        },
+        renameItem: function() {
+          this.get('items').objectAt(0).set('title', 'changed');
+        },
+        addChild: function() {
+          this.get('items').objectAt(0).get('children').pushObject(Node.create({title: 'Meow, a kid!'}));
+        }
+      }
+    });
+    
   </script>
 </head>
 <body>
   <script type="text/x-handlebars">
-    {{js-tree}}
+    {{js-tree roots=items}}
+    <button {{action 'overwriteItems'}}>Overwrite stuff</button>
+    <button {{action 'clearItems'}}>Clear stuff</button>
+    <button {{action 'addItem'}}>Add item</button>
+    <button {{action 'renameItem'}}>Rename item</button>
+    <button {{action 'addChild'}}>Add child</button>
   </script>
+  
 </body>
 </html>
