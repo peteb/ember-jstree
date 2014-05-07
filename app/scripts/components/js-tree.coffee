@@ -1,8 +1,10 @@
 root = exports ? this
 
 root.EmberJsTree = Em.Mixin.create
-  JsTreeComponent: Em.Component.extend
-  
+  ##
+  # Component.
+  ##
+  JsTreeComponent: Em.Component.extend  
     # Properties
     roots: Em.A()
     selected: Em.A()
