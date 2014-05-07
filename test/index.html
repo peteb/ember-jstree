@@ -14,6 +14,7 @@
     
     App.ApplicationController = Em.Controller.extend({
       items: Em.A(),
+      selected: Em.A(),
       init: function() {
         var items = Em.A([
             Node.create({title: 'root1'}),
@@ -36,10 +37,14 @@
           this.get('items').clear();
         },
         addItem: function() {
-          this.get('items').pushObject(Node.create({title: 'freshly baked'}));
+          this.get('items').pushObject(Node.create({title: 'freshly baked', selected: true, disabled: true}));
         },
         renameItem: function() {
           this.get('items').objectAt(0).set('title', 'changed');
+        },
+        toggleDisabled: function() {
+          var val = this.get('items').objectAt(1).get('disabled');
+          this.get('items').objectAt(1).set('disabled', !val);
         },
         addChild: function() {
           this.get('items').objectAt(0).get('children').pushObject(Node.create({title: 'Meow, a kid!'}));
@@ -51,12 +56,19 @@
 </head>
 <body>
   <script type="text/x-handlebars">
-    {{js-tree roots=items}}
+    {{js-tree roots=items selected=selected}}
     <button {{action 'overwriteItems'}}>Overwrite stuff</button>
     <button {{action 'clearItems'}}>Clear stuff</button>
     <button {{action 'addItem'}}>Add item</button>
     <button {{action 'renameItem'}}>Rename item</button>
     <button {{action 'addChild'}}>Add child</button>
+    <button {{action 'toggleDisabled'}}>Toggle disabled</button>
+
+    <br />
+    Selected: 
+    {{#each selected}}
+    {{title}}
+    {{/each}}
   </script>
   
 </body>
