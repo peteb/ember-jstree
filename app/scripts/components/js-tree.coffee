@@ -10,6 +10,27 @@ root.EmberJsTree = Em.Mixin.create
     _tree: null
     _lastNodeId: 0
     
+
+    ##
+    # Loads the jstree component and initializes it with
+    # configuration options and a callback that will generate
+    # the json representation of our nodes.
+    ##
+    didInsertElement: ->
+      @$().jstree
+        core:
+          data: (_, cback) =>
+            cback(@_serializeTree())
+
+      @_tree = @$().jstree(true)
+
+
+    ##
+    # Unregister observers etc.
+    ##
+    willDestroyElement: ->
+
+      
     ##
     # Reloads the whole tree recursively.
     ##
@@ -19,7 +40,7 @@ root.EmberJsTree = Em.Mixin.create
         @_tree.refresh()
     ).observes 'roots.[]'
 
-    
+
     ##
     # Registers observers and generates ids for new nodes
     ##
@@ -42,25 +63,9 @@ root.EmberJsTree = Em.Mixin.create
     ).on 'init'
 
     _updateNodeTitle: (sender) ->
-      @_tree.set_text(sender._attached['id'], sender.get('title')) # set_text is working, rename_node isn't
-      
-      
-    ##
-    # Loads the jstree component and initializes it with
-    # configuration options and a callback that will generate
-    # the json representation of our nodes.
-    ##
-    didInsertElement: ->
-      @$().jstree
-        core:
-          data: (_, cback) =>
-            cback(@_serializeTree())
+      @_tree.set_text(sender._attached['id'], sender.get('title')) # rename_node = not working
 
-      @_tree = @$().jstree(true)
-      
-    willDestroyElement: ->
-      # Unregister observers
-      
+    
     ##
     # Serializes the roots into jstree-friendly json.
     ##
