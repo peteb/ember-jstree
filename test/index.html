@@ -48,6 +48,9 @@
         },
         addChild: function() {
           this.get('items').objectAt(0).get('children').pushObject(Node.create({title: 'Meow, a kid!'}));
+        },
+        selectItems: function() {
+          this.set('selected', Em.A([this.get('items').objectAt(0).get('children').objectAt(0)]));
         }
       }
     });
@@ -63,6 +66,7 @@
     <button {{action 'renameItem'}}>Rename item</button>
     <button {{action 'addChild'}}>Add child</button>
     <button {{action 'toggleDisabled'}}>Toggle disabled</button>
+    <button {{action 'selectItems'}}>Select some item</button>
 
     <br />
     Selected: 

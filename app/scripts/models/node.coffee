@@ -16,12 +16,10 @@ root.Node = Em.Object.extend
   
   
   ##
-  # Returns jstree-friendly json.
+  # Returns jstree-json. No recursing here.
   ##
   _serialize: ->
     text: @get('title')
-    children: @get('children').map (child) -> child._serialize()
-    id: @_attached['id']
     model: this
     state:
       disabled: @get('disabled')

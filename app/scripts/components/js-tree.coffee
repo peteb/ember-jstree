@@ -10,7 +10,7 @@ root.EmberJsTree = Em.Mixin.create
     # Private
     _tree: null
     _lastNodeId: 0
-    
+    _ignoreSelectedProperty: false
 
     ##
     # Loads the jstree component and initializes it with
@@ -39,10 +39,7 @@ root.EmberJsTree = Em.Mixin.create
     ##
     willDestroyElement: ->
 
-    _updateSelectedProperty: (selectedIds) ->
-      selected = selectedIds.map (id) => @_tree.get_node(id).original.model
-      @set('selected', selected)
-      
+
     ##
     # Reloads the whole tree recursively.
     ##
@@ -52,6 +49,12 @@ root.EmberJsTree = Em.Mixin.create
         @_tree.refresh()
     ).observes 'roots.[]'
 
+
+    _updateSelectedProperty: (selectedIds) ->
+      selected = selectedIds.map (id) => @_tree.get_node(id).original.model
+      @_ignoreSelectedProperty = true
+      @set('selected', selected)
+      @_ignoreSelectedProperty = false      
 
     ##
     # Registers observers and generates ids for new nodes. Binds nodes
@@ -69,17 +72,28 @@ root.EmberJsTree = Em.Mixin.create
             component: @elementId
             id: ++@_lastNodeId
                       
-        node.addObserver('title', this, '_didUpdateNodeTitle')
-        node.addObserver('disabled', this, '_didUpdateNodeDisabled')
+        node.addObserver('title', this, '_nodeTitleDidChange')
+        node.addObserver('disabled', this, '_nodeDisabledDidChange')
         node.addObserver('children.[]', this, 'refreshTree')  # We'll just refresh the whole tree
         
         @_attachNodes(node.get('children'))
     ).on 'init'
 
-    _didUpdateNodeTitle: (sender) ->
+    
+    ##
+    # Update jstree according to the selection change.
+    ##
+    _selectedDidChange: (->
+      if !@_ignoreSelectedProperty
+        ids = @get('selected').map (model) -> model._attached['id']
+        @_tree.deselect_all()
+        @_tree.select_node(ids, true)
+    ).observes 'selected'
+
+    _nodeTitleDidChange: (sender) ->
       @_tree.set_text(sender._attached['id'], sender.get('title')) # rename_node = not working
 
-    _didUpdateNodeDisabled: (sender) ->
+    _nodeDisabledDidChange: (sender) ->
       if sender.get('disabled')
         @_tree.disable_node(sender._attached['id'])
       else
@@ -87,6 +101,16 @@ root.EmberJsTree = Em.Mixin.create
     
     ##
     # Serializes the roots into jstree-friendly json.
+    # Recurses down over children.
     ##
-    _serializeTree: ->
-      @roots.map (root) -> root._serialize()
+    _serializeTree: (nodes) ->
+      nodes ||= @get('roots')
+      selectedNodes = @get('selected')
+      
+      nodes.map (node) =>
+        opts = node._serialize()
+        opts['id'] = node._attached['id']
+        opts['state'] ||= {}
+        opts['state']['selected'] = (selectedNodes.indexOf(node) != -1) # fixes selection flickering
+        opts['children'] = @_serializeTree(node.get('children'))
+        opts
