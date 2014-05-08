@@ -40,7 +40,7 @@ root.EmberJsTree = Em.Mixin.create
     # Unregister observers etc.
     ##
     willDestroyElement: ->
-
+      # TODO
 
     ##
     # Reloads the whole tree recursively.
