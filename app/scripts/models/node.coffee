@@ -4,9 +4,11 @@ root = exports ? this
 # Wrapper object for nodes in the jstree component.
 ##
 root.Node = Em.Object.extend
+  # Properties
   title: 'hullo'
   children: null
   disabled: false
+  editing: false
   
   ##
   # Constructor

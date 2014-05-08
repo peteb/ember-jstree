@@ -25,14 +25,14 @@ root.EmberJsTree = Em.Mixin.create
       @_tree = @$().jstree(true)
 
       @$().on 'changed.jstree', (event, data) =>
-        Em.run.once this, ->
-          @_updateSelectedProperty(data.selected)
+        @_updateSelectedProperty(data.selected)
 
       @$().on 'select_node.jstree', (event, data) =>
-        Em.run.once this, ->
-          @_updateSelectedProperty(data.selected)
+        @_updateSelectedProperty(data.selected)
 
-
+      @$().on 'set_text.jstree', (obj, data) =>
+        @_updateTitleProperty(data.obj.original.model, data.text)
+        
     ##
     # Unregister observers etc.
     ##
@@ -60,6 +60,11 @@ root.EmberJsTree = Em.Mixin.create
       @set('selected', selected)
       @_ignoreSelectedProperty = false      
 
+    _updateTitleProperty: (object, text) ->
+      object.set('title', text)
+      if object.get('editing')
+        object.set('editing', false)
+      
     ##
     # Registers observers and generates ids for new nodes. Binds nodes
     # to this component.
@@ -77,6 +82,7 @@ root.EmberJsTree = Em.Mixin.create
             id: ++@_lastNodeId
                       
         node.addObserver('title', this, '_nodeTitleDidChange')
+        node.addObserver('editing', this, '_nodeEditingDidChange')
         node.addObserver('disabled', this, '_nodeDisabledDidChange')
         node.addObserver('children.[]', this, 'refreshTree')  # We'll just refresh the whole tree
         
@@ -97,6 +103,12 @@ root.EmberJsTree = Em.Mixin.create
     _nodeTitleDidChange: (sender) ->
       @_tree.set_text(sender._attached['id'], sender.get('title')) # rename_node = not working
 
+    _nodeEditingDidChange: (sender) ->
+      if sender.get('editing')
+        @_tree.edit(sender._attached['id'])
+      else
+        @_tree.refresh(sender._attached['id'])
+        
     _nodeDisabledDidChange: (sender) ->
       if sender.get('disabled')
         @_tree.disable_node(sender._attached['id'])

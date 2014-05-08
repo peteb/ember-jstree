@@ -5,10 +5,10 @@
   <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/jstree/3.0.0/themes/default/style.min.css" />
   
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
-  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jstree/3.0.0/jstree.min.js"></script>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.js"></script>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/ember.js/1.5.0/ember.js"></script>
   <script type="text/javascript" src="../build/ember-jstree.js"></script>
+  <script type="text/javascript" src="../node_modules/jstree/dist/jstree.js"></script>
   <script type="text/javascript">
     App = Ember.Application.createWithMixins(EmberJsTree);
     
@@ -51,6 +51,11 @@
         },
         selectItems: function() {
           this.set('selected', Em.A([this.get('items').objectAt(0).get('children').objectAt(0)]));
+        },
+        toggleEditingSelected: function() {
+          this.get('selected').forEach(function(item) {
+            item.set('editing', !item.get('editing'));
+          });
         }
       }
     });
@@ -67,6 +72,7 @@
     <button {{action 'addChild'}}>Add child</button>
     <button {{action 'toggleDisabled'}}>Toggle disabled</button>
     <button {{action 'selectItems'}}>Select some item</button>
+    <button {{action 'toggleEditingSelected'}}>Edit/unedit selected items</button>
 
     <br />
     Selected: 
