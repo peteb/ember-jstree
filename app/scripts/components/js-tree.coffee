@@ -8,6 +8,7 @@ root.EmberJsTree = Em.Mixin.create
     # Properties
     roots: Em.A()
     selected: Em.A()
+    options: {}
     
     # Private
     _tree: null
@@ -20,11 +21,7 @@ root.EmberJsTree = Em.Mixin.create
     # the json representation of our nodes.
     ##
     didInsertElement: ->
-      @$().jstree
-        core:
-          data: (_, cback) =>
-            cback(@_serializeTree())
-
+      @$().jstree(@_opts())
       @_tree = @$().jstree(true)
 
       @$().on 'changed.jstree', (event, data) =>
@@ -51,7 +48,12 @@ root.EmberJsTree = Em.Mixin.create
         @_tree.refresh()
     ).observes 'roots.[]'
 
-
+    _opts: ->
+      $.extend true, @get('options'), 
+        core:
+          data: (_, cback) =>
+            cback(@_serializeTree())
+      
     _updateSelectedProperty: (selectedIds) ->
       selected = selectedIds.map (id) => @_tree.get_node(id).original.model
       @_ignoreSelectedProperty = true
@@ -110,9 +112,8 @@ root.EmberJsTree = Em.Mixin.create
       selectedNodes = @get('selected')
       
       nodes.map (node) =>
-        opts = node._serialize()
-        opts['id'] = node._attached['id']
-        opts['state'] ||= {}
-        opts['state']['selected'] = (selectedNodes.indexOf(node) != -1) # fixes selection flickering
-        opts['children'] = @_serializeTree(node.get('children'))
-        opts
+        opts = $.extend true, node._serialize(),
+          id: node._attached['id']
+          children: @_serializeTree(node.get('children'))
+          state:
+            selected: selectedNodes.indexOf(node) != -1 # fixes selection flickering
