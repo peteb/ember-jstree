@@ -30,8 +30,8 @@ root.EmberJsTree = Em.Mixin.create
       @$().on 'select_node.jstree', (event, data) =>
         @_updateSelectedProperty(data.selected)
 
-      @$().on 'set_text.jstree', (obj, data) =>
-        @_updateTitleProperty(data.obj.original.model, data.text)
+      @$().on 'rename_node.jstree', (obj, data) =>
+        @_updateTitleProperty(data.node.original.model, data.text)
         
     ##
     # Unregister observers etc.
@@ -51,6 +51,7 @@ root.EmberJsTree = Em.Mixin.create
     _opts: ->
       $.extend true, @get('options'), 
         core:
+          check_callback: true
           data: (_, cback) =>
             cback(@_serializeTree())
       
@@ -106,8 +107,6 @@ root.EmberJsTree = Em.Mixin.create
     _nodeEditingDidChange: (sender) ->
       if sender.get('editing')
         @_tree.edit(sender._attached['id'])
-      else
-        @_tree.refresh(sender._attached['id'])
         
     _nodeDisabledDidChange: (sender) ->
       if sender.get('disabled')
