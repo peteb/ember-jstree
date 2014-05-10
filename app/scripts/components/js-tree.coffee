@@ -85,6 +85,7 @@ root.EmberJsTree = Em.Mixin.create
         node.addObserver('title', this, '_nodeTitleDidChange')
         node.addObserver('editing', this, '_nodeEditingDidChange')
         node.addObserver('disabled', this, '_nodeDisabledDidChange')
+        node.addObserver('icon', this, '_nodeIconDidChange')
         node.addObserver('children.[]', this, 'refreshTree')  # We'll just refresh the whole tree
         
         @_attachNodes(node.get('children'))
@@ -104,6 +105,9 @@ root.EmberJsTree = Em.Mixin.create
     _nodeTitleDidChange: (sender) ->
       @_tree.set_text(sender._attached['id'], sender.get('title')) # rename_node = not working
 
+    _nodeIconDidChange: (sender) ->
+      @_tree.set_icon(sender._attached['id'], sender.get('icon'))
+      
     _nodeEditingDidChange: (sender) ->
       if sender.get('editing')
         @_tree.edit(sender._attached['id'])
@@ -126,5 +130,6 @@ root.EmberJsTree = Em.Mixin.create
         opts = $.extend true, node._serialize(),
           id: node._attached['id']
           children: @_serializeTree(node.get('children'))
+          icon: node.get('icon')
           state:
             selected: selectedNodes.indexOf(node) != -1 # fixes selection flickering

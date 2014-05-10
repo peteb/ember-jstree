@@ -3,6 +3,7 @@
 <head>
   <title>Test Page for ember-jstree</title>
   <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/jstree/3.0.0/themes/default/style.min.css" />
+  <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
   
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.js"></script>
@@ -17,7 +18,7 @@
       selected: Em.A(),
       init: function() {
         var items = Em.A([
-            Node.create({title: 'root1'}),
+            Node.create({title: 'root1', icon: 'fa fa-smile-o'}),
             Node.create({title: 'root2'})
         ]);
 
@@ -56,6 +57,11 @@
           this.get('selected').forEach(function(item) {
             item.set('editing', !item.get('editing'));
           });
+        },
+        setIcon: function() {
+          this.get('selected').forEach(function(item) {
+            item.set('icon', 'fa fa-thumbs-o-up');
+          });
         }
       }
     });
@@ -73,6 +79,7 @@
     <button {{action 'toggleDisabled'}}>Toggle disabled</button>
     <button {{action 'selectItems'}}>Select some item</button>
     <button {{action 'toggleEditingSelected'}}>Edit/unedit selected items</button>
+    <button {{action 'setIcon'}}>Set icon</button>
 
     <br />
     Selected: 
