@@ -103,7 +103,7 @@ root.EmberJsTree = Em.Mixin.create
     # Update jstree according to the selection change.
     ##
     _selectedDidChange: (->
-      if !@_ignoreSelectedProperty
+      unless @_ignoreSelectedProperty
         ids = (@get('selected') || []).map (model) -> model._attached['id']
         @_tree.deselect_all()
         @_tree.select_node(ids, true)
