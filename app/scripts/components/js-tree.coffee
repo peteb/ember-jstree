@@ -97,7 +97,7 @@ root.EmberJsTree = Em.Mixin.create
     ##
     _selectedDidChange: (->
       if !@_ignoreSelectedProperty
-        ids = @get('selected').map (model) -> model._attached['id']
+        ids = (@get('selected') || []).map (model) -> model._attached['id']
         @_tree.deselect_all()
         @_tree.select_node(ids, true)
     ).observes 'selected'
@@ -132,4 +132,4 @@ root.EmberJsTree = Em.Mixin.create
           children: @_serializeTree(node.get('children'))
           icon: node.get('icon')
           state:
-            selected: selectedNodes.indexOf(node) != -1 # fixes selection flickering
+            selected: selectedNodes && selectedNodes.indexOf(node) != -1 # fixes selection flickering
