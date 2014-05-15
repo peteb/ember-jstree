@@ -70,7 +70,7 @@ root.EmberJsTree = Em.Mixin.create
     # Registers observers and generates ids for new nodes. Binds nodes
     # to this component.
     ##
-    _attachNodes: ((nodes) ->
+    _attachNodes: ((nodes, parent) ->
       nodes ||= @get('roots')
       
       for node, i in nodes
@@ -88,7 +88,9 @@ root.EmberJsTree = Em.Mixin.create
         node.addObserver('icon', this, '_nodeIconDidChange')
         node.addObserver('children.[]', this, 'refreshTree')  # We'll just refresh the whole tree
         
-        @_attachNodes(node.get('children'))
+        node.set('parent', parent)
+        
+        @_attachNodes(node.get('children'), node)
     ).on 'init'
 
     

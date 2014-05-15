@@ -9,13 +9,13 @@ root.Node = Em.Object.extend
   children: null
   disabled: false
   editing: false
+  parent: undefined
   
   ##
   # Constructor
   ##
   init: ->
     @children = Em.A()
-  
   
   ##
   # Returns jstree-json. No recursing here.

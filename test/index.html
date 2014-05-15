@@ -48,7 +48,7 @@
           this.get('items').objectAt(1).set('disabled', !val);
         },
         addChild: function() {
-          this.get('items').objectAt(0).get('children').pushObject(Node.create({title: 'Meow, a kid!'}));
+          this.get('items').objectAt(0).get('children').pushObject(Node.create({title: 'Meow'}));
         },
         selectItems: function() {
           this.set('selected', Em.A([this.get('items').objectAt(0).get('children').objectAt(0)]));
@@ -84,7 +84,8 @@
     <br />
     Selected: 
     {{#each selected}}
-    {{title}}
+      {{title}}
+      {{parent.title}}
     {{/each}}
   </script>
   
