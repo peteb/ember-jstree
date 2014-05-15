@@ -80,7 +80,7 @@ root.EmberJsTree = Em.Mixin.create
           # Setup attachment metadata
           node._attached = 
             component: @elementId
-            id: ++@_lastNodeId
+            id: (node.get && node.get('id')) || node.id || ++@_lastNodeId
                       
         node.addObserver('title', this, '_nodeTitleDidChange')
         node.addObserver('editing', this, '_nodeEditingDidChange')
