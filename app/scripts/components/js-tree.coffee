@@ -90,6 +90,11 @@ root.EmberJsTree = Em.Mixin.create
         
         node.set('parent', parent)
         
+        if node.get('editing')
+          # jstree might not contain the node yet, so we need to defer the edit
+          Em.run.later =>
+            @_tree.edit(node._attached['id'])
+        
         @_attachNodes(node.get('children'), node)
     ).on 'init'
 

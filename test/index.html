@@ -40,6 +40,14 @@
         addItem: function() {
           this.get('items').pushObject(Node.create({title: 'freshly baked', selected: true, disabled: true}));
         },
+        addEditingItem: function() {
+          var newNode = Node.create({
+            title: '',
+            editing: true
+          });
+          
+          this.get('items').pushObject(newNode);
+        },
         renameItem: function() {
           this.get('items').objectAt(0).set('title', 'changed');
         },
@@ -74,6 +82,7 @@
     <button {{action 'overwriteItems'}}>Overwrite stuff</button>
     <button {{action 'clearItems'}}>Clear stuff</button>
     <button {{action 'addItem'}}>Add item</button>
+    <button {{action 'addEditingItem'}}>Add editing item</button>
     <button {{action 'renameItem'}}>Rename item</button>
     <button {{action 'addChild'}}>Add child</button>
     <button {{action 'toggleDisabled'}}>Toggle disabled</button>
