@@ -139,4 +139,4 @@ root.EmberJsTree = Em.Mixin.create
           children: @_serializeTree(node.get('children'))
           icon: node.get('icon')
           state:
-            selected: selectedNodes && selectedNodes.indexOf(node) != -1 # fixes selection flickering
+            selected: selectedNodes && selectedNodes.some((o) -> o._attached['id'] == node._attached['id']) # fixes selection flickering

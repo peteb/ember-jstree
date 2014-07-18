@@ -5,6 +5,11 @@ A simple way to get a dynamic tree view in your Ember.js apps without losing too
 when the procedural API of jsTree is translated into the more declarative style of Ember
 properties.
 
+Building
+--------
+
+Just call ```grunt``` in the directory.
+
 Usage
 -----
 
