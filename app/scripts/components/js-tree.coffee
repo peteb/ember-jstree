@@ -14,7 +14,8 @@ root.EmberJsTree = Em.Mixin.create
     _tree: null
     _lastNodeId: 0
     _ignoreSelectedProperty: false
-
+    _previouslySelectedIds: []
+    
     ##
     # Loads the jstree component and initializes it with
     # configuration options and a callback that will generate
@@ -105,8 +106,9 @@ root.EmberJsTree = Em.Mixin.create
     _selectedDidChange: (->
       unless @_ignoreSelectedProperty
         ids = (@get('selected') || []).map (model) -> model._attached['id']
-        @_tree.deselect_all()
         @_tree.select_node(ids, true)
+        @_tree.deselect_node(@_previouslySelectedIds)
+        @_previouslySelectedIds = ids
     ).observes 'selected'
 
     _nodeTitleDidChange: (sender) ->
@@ -139,4 +141,4 @@ root.EmberJsTree = Em.Mixin.create
           children: @_serializeTree(node.get('children'))
           icon: node.get('icon')
           state:
-            selected: selectedNodes && selectedNodes.some((o) -> o._attached['id'] == node._attached['id']) # fixes selection flickering
+            selected: selectedNodes && selectedNodes.some (o) -> o._attached['id'] == node._attached['id'] # fixes selection flickering
