@@ -87,6 +87,7 @@ root.EmberJsTree = Em.Mixin.create
         node.addObserver('editing', this, '_nodeEditingDidChange')
         node.addObserver('disabled', this, '_nodeDisabledDidChange')
         node.addObserver('icon', this, '_nodeIconDidChange')
+        node.addObserver('isOpen', this, '_nodeIsOpenDidChange')
         node.addObserver('children.[]', this, 'refreshTree')  # We'll just refresh the whole tree
         
         node.set('parent', parent)
@@ -126,6 +127,12 @@ root.EmberJsTree = Em.Mixin.create
         @_tree.disable_node(sender._attached['id'])
       else
         @_tree.enable_node(sender._attached['id'])
+
+    _nodeIsOpenDidChange: (sender) ->
+        if sender.get('isOpen')
+            @_tree.open_node(sender._attached['id'])
+        else
+            @_tree.close_node(sender._attached['id'])
     
     ##
     # Serializes the roots into jstree-friendly json.
@@ -141,4 +148,5 @@ root.EmberJsTree = Em.Mixin.create
           children: @_serializeTree(node.get('children'))
           icon: node.get('icon')
           state:
+            opened: node.get('isOpen')
             selected: selectedNodes && selectedNodes.some (o) -> o._attached['id'] == node._attached['id'] # fixes selection flickering

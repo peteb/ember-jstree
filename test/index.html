@@ -55,6 +55,10 @@
           var val = this.get('items').objectAt(1).get('disabled');
           this.get('items').objectAt(1).set('disabled', !val);
         },
+        toggleOpen: function() {
+          var val = this.get('items').objectAt(0).get('isOpen');
+          this.get('items').objectAt(0).set('isOpen', !val);
+        },
         addChild: function() {
           this.get('items').objectAt(0).get('children').pushObject(Node.create({title: 'Meow'}));
         },
@@ -86,6 +90,7 @@
     <button {{action 'renameItem'}}>Rename item</button>
     <button {{action 'addChild'}}>Add child</button>
     <button {{action 'toggleDisabled'}}>Toggle disabled</button>
+    <button {{action 'toggleOpen'}}>Toggle Open</button>
     <button {{action 'selectItems'}}>Select some item</button>
     <button {{action 'toggleEditingSelected'}}>Edit/unedit selected items</button>
     <button {{action 'setIcon'}}>Set icon</button>
