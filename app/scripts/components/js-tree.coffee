@@ -107,7 +107,7 @@ root.EmberJsTree = Em.Mixin.create
       unless @_ignoreSelectedProperty
         ids = (@get('selected') || []).map (model) -> model._attached['id']
         @_tree.select_node(ids, true)
-        @_tree.deselect_node(@_previouslySelectedIds)
+        @_tree.deselect_node($(@_previouslySelectedIds).not($(ids)).get())
         @_previouslySelectedIds = ids
     ).observes 'selected'
 
