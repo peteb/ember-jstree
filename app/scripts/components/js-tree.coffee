@@ -72,7 +72,7 @@ root.EmberJsTree = Em.Mixin.create
     # to this component.
     ##
     _attachNodes: ((nodes, parent) ->
-      nodes ||= @get('roots')
+      nodes ||= @get('roots') || []
       
       for node, i in nodes
         if node._attached
@@ -132,7 +132,7 @@ root.EmberJsTree = Em.Mixin.create
     # Recurses down over children.
     ##
     _serializeTree: (nodes) ->
-      nodes ||= @get('roots')
+      nodes ||= @get('roots') || []
       selectedNodes = @get('selected')
       
       nodes.map (node) =>
