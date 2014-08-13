@@ -34,6 +34,9 @@ root.EmberJsTree = Em.Mixin.create
       @$().on 'rename_node.jstree', (obj, data) =>
         @_updateTitleProperty(data.node.original.model, data.text)
         
+      @$().on 'dblclick.jstree', =>
+        @sendAction('willRename')
+        
     ##
     # Unregister observers etc.
     ##
@@ -57,7 +60,10 @@ root.EmberJsTree = Em.Mixin.create
             cback(@_serializeTree())
       
     _updateSelectedProperty: (selectedIds) ->
-      selected = selectedIds.map (id) => @_tree.get_node(id).original.model
+      selected = selectedIds.map (id) => 
+        if node = @_tree.get_node(id)
+          node.original.model
+          
       @_ignoreSelectedProperty = true
       @set('selected', selected)
       @_ignoreSelectedProperty = false      
