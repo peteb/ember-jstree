@@ -10,6 +10,7 @@ root.Node = Em.Object.extend
   disabled: false
   editing: false
   parent: undefined
+  isOpen: false
   
   ##
   # Constructor
@@ -24,4 +25,5 @@ root.Node = Em.Object.extend
     text: @get('title')
     model: this
     state:
+      opened: @get('isOpen')
       disabled: @get('disabled')
